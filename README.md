@@ -18,7 +18,7 @@ My first time solving AoC puzzles in OCaml from the get-go.
 (I've used OCaml for [AoC 2017](https://github.com/narimiran/AdventOfCode2017), but only after I've solved all tasks with other languages first -- as a preparation for this year.)
 
 
-Task                                                                | Solution                   | Note
----                                                                 | ---                        | ---
-[Day 1: TBA](http://adventofcode.com/2019/day/1)                    | [day01.ml](ocaml/day01.ml) |
+Task                                                                               | Solution                   | Note
+---                                                                                | ---                        | ---
+[Day 1: The Tyranny of the Rocket Equation](http://adventofcode.com/2019/day/1)    | [day01.ml](ocaml/day01.ml) |
 
