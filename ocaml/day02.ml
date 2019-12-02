@@ -38,19 +38,13 @@ let part_1 =
   %> run_until_halt
   %> Printf.printf "%d\n"
 
-let part_2 intcode =
-  let noun = ref (-1) in
-  let verb = ref (-1) in
-  let s = ref 0 in
-  while !s <> output do
-    incr noun;
-    verb := -1;
-    while !verb < 100 && !s <> output do
-      incr verb;
-      s := intcode |> set_up !noun !verb |> run_until_halt;
-    done;
-  done;
-  100 * !noun + !verb |> Printf.printf "%d\n"
+let rec part_2 ?(noun=0) intcode =
+  let result = intcode |> set_up noun 0 |> run_until_halt in
+  let verb = output - result in
+  if verb < 100 then
+    100 * noun + verb |> Printf.printf "%d\n"
+  else
+    part_2 ~noun:(noun+1) intcode
 
 
 let () =
