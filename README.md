@@ -21,4 +21,4 @@ My first time solving AoC puzzles in OCaml from the get-go.
 Task                                                                               | Solution                   | Note
 ---                                                                                | ---                        | ---
 [Day 1: The Tyranny of the Rocket Equation](http://adventofcode.com/2019/day/1)    | [day01.ml](ocaml/day01.ml) |
-
+[Day 2: 1202 Program Alarm](http://adventofcode.com/2019/day/2)                    | [day02.ml](ocaml/day02.ml) | Not really FP-friendly: using `array`, `while` loop and `ref`s.
