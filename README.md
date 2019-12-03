@@ -22,3 +22,4 @@ Task                                                                            
 ---                                                                                | ---                        | ---
 [Day 1: The Tyranny of the Rocket Equation](http://adventofcode.com/2019/day/1)    | [day01.ml](ocaml/day01.ml) |
 [Day 2: 1202 Program Alarm](http://adventofcode.com/2019/day/2)                    | [day02.ml](ocaml/day02.ml) | Our inputs are such that there is no need to iterate through all possible `verb`s.
+[Day 3: Crossed Wires](http://adventofcode.com/2019/day/3)                         | [day03.ml](ocaml/day03.ml) | Initial solution created a `Map` for every wire and then intersections were found via `Map.merge`. Although elegant, it was very inefficient. Current solution treats wires differently: with the second wire we only check for intersections.

@@ -21,4 +21,4 @@ let solve ~part input =
 
 let () =
   input |> solve ~part:1;
-  input |> solve ~part:2;
+  input |> solve ~part:2

@@ -49,4 +49,4 @@ let rec part_2 ?(noun=0) intcode =
 
 let () =
   input |> part_1;
-  input |> part_2;
+  input |> part_2
