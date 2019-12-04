@@ -7,7 +7,7 @@ let input =
 let output = 19690720
 
 
-let set_up n v l =
+let set_up n ?(v=0) l =
   let a = Array.of_list l in
   a.(1) <- n;
   a.(2) <- v;
@@ -34,12 +34,12 @@ let run_until_halt a =
 
 let part_1 =
   let open CCFun in
-  set_up 12 2
+  set_up 12 ~v:2
   %> run_until_halt
   %> Printf.printf "%d\n"
 
 let rec part_2 ?(noun=0) intcode =
-  let result = intcode |> set_up noun 0 |> run_until_halt in
+  let result = intcode |> set_up noun |> run_until_halt in
   let verb = output - result in
   if verb < 100 then
     100 * noun + verb |> Printf.printf "%d\n"
