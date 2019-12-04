@@ -73,3 +73,53 @@ let () =
   intersections |> find closest;
   intersections |> find shortest
 ```
+
+
+### Day 4
+
+[Secure Container](http://adventofcode.com/2019/day/4) || [day04.ml](ocaml/day04.ml) || Runtime: 0.6 ms
+
+The initial solution iterated through the whole range between `low` and `high`,
+converting each number to `String` or `OSeq` (I've tried both versions):
+```ocaml
+let solve ~part =
+  let f = if part = 1 then ( >= ) else ( = ) in
+  let res = ref 0 in
+  for i = low to high do
+    let sq = String.to_seq (string_of_int i) in
+    if not_decr sq then
+      let groups = sq |> OSeq.group ~eq:Char.equal in
+      if OSeq.exists (fun g -> f (OSeq.length g) 2) groups then incr res
+  done;
+  !res
+```
+This had 1.3 **b**illion instructions and its runtime was around 130 ms.
+
+Current solution is much uglier: it has six for-loops to iterate on each digit,
+where lower bound for each digit is dependant on the digit before it.
+Also, we iterate over potential candidates only once, and test for both parts:
+```ocaml
+let digit_groups = [ a; b; c; d; e; f ] |> group_lengths in
+if digit_groups |> has_multiples then incr part_1;
+if digit_groups |> has_duplicates then incr part_2
+```
+where `group_lengths` is a specialised and optimized version of `CCList.group_succ`
+just for this task:
+No unnecessary creations of lists of groups and `List.rev`,
+we're interested only in number of members of each group of the same digit:
+```ocaml
+let group_lengths l =
+  let rec aux acc cur amnt l =
+    match cur, l with
+    | _, [] -> amnt :: acc
+    | y, x :: tl when Int.equal x y -> aux acc x (amnt+1) tl
+    | _, x :: tl -> aux (amnt :: acc) x 1 tl
+  in
+  aux [] 0 0 l
+```
+
+The result of changing the algorithm and applying these micro-optimisations?
+900k instructions (1500 times less than original!) and its runtime is 0.6 ms.
+If it is ugly but it works... :)
+
+Bonus: the main function looks like `>>=`.
