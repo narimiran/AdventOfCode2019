@@ -18,21 +18,31 @@ My first time solving AoC puzzles in OCaml from the get-go.
 (I've used OCaml for [AoC 2017](https://github.com/narimiran/AdventOfCode2017),
 but only after I've solved all tasks with other languages first -- as a preparation for this year.)
 
+To keep this readme at a reasonable vertical size when rendered,
+highlights and thoughts for each day are hidden behind the "details" flag.
+Click on it if you want to read my ramblings.
 
 
 ### Day 1
 
 [The Tyranny of the Rocket Equation](http://adventofcode.com/2019/day/1) || [day01.ml](ocaml/day01.ml) || Runtime: 0.6 ms
 
+<details>
+
 We have two slightly different functions (`f`) for each part, so counting the total boils down to:
 ```ocaml
 List.fold_left (fun acc x -> acc + f x) 0
 ```
 
+</details>
+
+
 
 ### Day 2
 
 [1202 Program Alarm](http://adventofcode.com/2019/day/2) || [day02.ml](ocaml/day02.ml) || Runtime: 0.6 ms
+
+<details>
 
 Our inputs are such that there is no need to iterate through all possible `verb`s,
 we can always leave `verb` at zero and later on calculate it from the difference between the desired and given output.
@@ -43,10 +53,15 @@ if verb < 100 then
   100 * noun + verb
 ```
 
+</details>
+
+
 
 ### Day 3
 
 [Crossed Wires](http://adventofcode.com/2019/day/3) || [day03.ml](ocaml/day03.ml) || Runtime: 50 ms
+
+<details>
 
 Initial idea was to create a `Map` for every wire and then to find intersections via `Map.merge`:
 ```ocaml
@@ -74,10 +89,15 @@ let () =
   intersections |> find shortest
 ```
 
+</details>
+
+
 
 ### Day 4
 
 [Secure Container](http://adventofcode.com/2019/day/4) || [day04.ml](ocaml/day04.ml) || Runtime: 0.6 ms
+
+<details>
 
 The initial solution iterated through the whole range between `low` and `high`,
 converting each number to `String` or `OSeq` (I've tried both versions):
@@ -124,11 +144,15 @@ If it is ugly but it works... :)
 
 Bonus: the main function looks like `>>=`.
 
+</details>
+
 
 
 ### Day 5
 
 [Sunny with a Chance of Asteroids](http://adventofcode.com/2019/day/5) || [day05.ml](ocaml/day05.ml) || Runtime: 0.7 ms
+
+<details>
 
 After you finally manage to read and understand what the instructions want from you,
 the task becomes quite straight-forward.
@@ -176,3 +200,5 @@ match a.(ip) mod 100 with
 
 Yes I've removed some of the custom operators defined above, so some duplication is reintroduced.
 I find it more readable this way.
+
+</details>
