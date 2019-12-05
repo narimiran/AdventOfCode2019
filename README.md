@@ -12,7 +12,7 @@ All my Advent of Code repos:
 &nbsp;
 
 
-## Solutions
+## Solutions, highlights and thoughts
 
 My first time solving AoC puzzles in OCaml from the get-go.
 (I've used OCaml for [AoC 2017](https://github.com/narimiran/AdventOfCode2017),
@@ -123,3 +123,56 @@ The result of changing the algorithm and applying these micro-optimisations?
 If it is ugly but it works... :)
 
 Bonus: the main function looks like `>>=`.
+
+
+
+### Day 5
+
+[Sunny with a Chance of Asteroids](http://adventofcode.com/2019/day/5) || [day05.ml](ocaml/day05.ml) || Runtime: 0.7 ms
+
+After you finally manage to read and understand what the instructions want from you,
+the task becomes quite straight-forward.
+Not counting the warm-up task on Day 1, I would say this was the easiest one so far:
+Take Day 2, add new opcodes, change some details, and you're done.
+
+Our "intcode computer" is starting to evolve and soon enough (but not yet)
+these things should be probably put in a separate module which will be used by multiple tasks.
+
+The initial solution had 8 separate branches for 8 separate opcodes.
+Simple and straightforward, but lots of unnecessary duplication:
+I've noticed that I can group together opcodes 1&2, 5&6, and 7&8 —
+the only difference between them was the function/operation involved,
+so the logical thing to do was to define custom operator for each group:
+```ocaml
+let ( +|* ) = if op = 1 then ( + ) else ( * ) in
+a.(dest) <- n +|* v
+
+let ( <>|= ) = if op = 5 then ( <> ) else ( = ) in
+if n <>|= 0 then v else ip+3
+
+let ( <|= ) = if op = 7 then ( < ) else ( = ) in
+a.(dest) <- if n <|= v then 1 else 0
+```
+
+Operation deduplication half way done.
+Groups 1&2 and 7&8 still had a lot of things in common
+(they both read two parameters, have the same destination location (`ip+3`), do the same jump (`ip+4`))
+so in the end they were put in the same branch to cut duplicated stuff some more:
+```ocaml
+let noun = read_param 1 in
+match a.(ip) mod 100 with
+| 1 | 2 | 7 | 8 as op ->
+  let verb = read_param 2 in
+  let dest = a.(ip+3) in
+  a.(dest) <-
+    (match op with
+     | 1 -> noun + verb
+     | 2 -> noun * verb
+     | 7 -> CCBool.to_int (noun < verb)
+     | 8 -> CCBool.to_int (noun = verb)
+     | _ -> failwith "ocaml, you silly");
+  ip+4
+```
+
+Yes I've removed some of the custom operators defined above, so some duplication is reintroduced.
+I find it more readable this way.
