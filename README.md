@@ -202,3 +202,49 @@ Yes I've removed some of the custom operators defined above, so some duplication
 I find it more readable this way.
 
 </details>
+
+
+
+### Day 6
+
+[Universal Orbit Map](http://adventofcode.com/2019/day/6) || [day06.ml](ocaml/day06.ml) || Runtime: 3 ms
+
+<details>
+
+Ungh! Quest for my future self:
+can you understand all the functions your previous self has written here?
+
+We go through the input and create two `Map`s, one (used for the first part of the task)
+containing `parent -> children` relationships (called `p2c`),
+and the other containing `kid -> parent` relationships (called `k2p`) for the second part.
+
+Part 1 is the recursive traversal through `"COM"`'s children, their children,
+their children's children, ... counting the total distance to `"COM"`:
+```ocaml
+let rec traverse n key =
+  match children with
+  | [] -> n
+  | _ ->
+    let children_distances = List.map (traverse (n+1)) children in
+    n + List.fold_left (+) 0 children_distances
+```
+
+The second part first builds the list of all ancestors for `"YOU"` and `"SAN"`:
+```ocaml
+let rec traverse relations acc = function
+  | "COM" -> acc
+  | kid ->
+    let parent = relations |> RelationMap.find kid in
+    traverse relations (parent::acc) parent
+```
+
+Both of those lists start with `"COM"` and all the common ancestors for both `"YOU"` and `"SAN"`.
+We need to remove those, and what remains is the answer for the second part:
+```ocaml
+let rec calc_orbital_transfers you san =
+  match you, san with
+  | x::xs, y::ys when x = y -> calc_orbital_transfers xs ys
+  | _, _ -> List.length you + List.length san
+```
+
+</details>
