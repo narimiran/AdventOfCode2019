@@ -40,14 +40,14 @@ List.fold_left (fun acc x -> acc + f x) 0
 
 ### Day 2
 
-[1202 Program Alarm](http://adventofcode.com/2019/day/2) || [day02.ml](ocaml/day02.ml) || Runtime: 0.6 ms
+[1202 Program Alarm](http://adventofcode.com/2019/day/2) || [day02.ml](ocaml/day02.ml) || Runtime: 0.9 ms
 
 <details>
 
 Our inputs are such that there is no need to iterate through all possible `verb`s,
 we can always leave `verb` at zero and later on calculate it from the difference between the desired and given output.
 ```ocaml
-let result = intcode |> set_up noun |> run_until_halt in
+let result = intcode |> set_up [(1, noun)] |> run in
 let verb = output - result in
 if verb < 100 then
   100 * noun + verb
@@ -154,6 +154,14 @@ Bonus: the main function looks like `>>=`.
 
 <details>
 
+Below are the notes from the original version of `day05.ml`, together with the bug that
+had bit me later on Day 9 (`let dest = a.(ip+3)`).
+After Day 9 was released, the common logic from days 2, 5, 7 and 9 was extracted to
+`intcode` module, and the solutions for those days were vastly simplified.
+(See ["Intcode int'mezzo"](#intcode-intmezzo) below for more details.)
+
+----
+
 After you finally manage to read and understand what the instructions want from you,
 the task becomes quite straight-forward.
 Not counting the warm-up task on Day 1, I would say this was the easiest one so far:
@@ -245,6 +253,67 @@ let rec calc_orbital_transfers you san =
   match you, san with
   | x::xs, y::ys when x = y -> calc_orbital_transfers xs ys
   | _, _ -> List.length you + List.length san
+```
+
+</details>
+
+
+
+### Intcode int'mezzo
+
+[intcode.ml](ocaml/lib/intcode.ml)
+
+<details>
+
+From Day 5 notes:
+
+> Our "intcode computer" is starting to evolve and soon enough (but not yet)
+> these things should be probably put in a separate module which will be used
+> by multiple tasks.
+
+The refactoring time has come.
+
+When Day 7 was released, I wasn't at home so I couldn't solve it at that time.
+I've read the task and realised that my current implementation from Day 5 won't fit for it,
+I would need to refactor it so the state between runs remains preserved.
+
+In the mean time, Day 9 was released, and with it our "intcode computer" implementation
+is complete.
+A perfect time to extract all the useful functions in a separate module.
+
+Our computer can be in three states:
+1. running - executing instructions until one of two things happen:
+2. waiting - computer's input queue is empty and it can't continue until it receives an input
+3. halted - computer has reached intcode 99
+
+The computer is now represented as a `record`:
+```ocaml
+type state = Running | Waiting | Halted
+
+type computer = {
+  ram : int array;
+  ip : int;
+  rp : int;
+  state : state;
+  in_queue : int Queue.t;
+  output : int;
+}
+```
+where `ip` and `rp` are instruction and relative pointers, respectively.
+(Other fields should be self-explanatory)
+
+Computer initialization supports specifying arbitrary RAM size (with the 4096 as the default),
+and passing initial value to the input queue.
+When computer has stopped (either waiting or halted), the whole state is
+returned as different tasks need different values from it.
+```ocaml
+let run_until_halt comp =
+  let rec run comp =
+    match comp.state with
+    | Halted | Waiting -> comp
+    | Running -> comp |> execute_opcode |> run
+  in
+  { comp with state = Running } |> run
 ```
 
 </details>

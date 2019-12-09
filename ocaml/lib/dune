@@ -1,0 +1,4 @@
+(library
+  (name intcode)
+  (libraries containers))
+
