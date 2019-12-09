@@ -317,3 +317,54 @@ let run_until_halt comp =
 ```
 
 </details>
+
+
+
+### Day 7
+
+[Amplification Circuit](http://adventofcode.com/2019/day/7) || [day07.ml](ocaml/day07.ml) || Runtime: 50 ms
+
+<details>
+
+Now that [my intcode module](ocaml/lib/intcode.ml) is complete, the main problem
+of this task becomes how to repeatedly loop through the amplifiers until one
+of them halts.
+
+[`CCList.fold_map`](https://c-cube.github.io/ocaml-containers/dev/containers/CCList/index.html#val-fold_map)
+proved to be very useful for this:
+It takes an accumulator (just like the regular `fold_left`), which in our case is
+the output of the previous computer/amplifier; and it returns a tuple containing
+both the accumulator and the modified list (like `map`), which are our computers/amplifiers
+after they had run this time.
+We need both of those outputs.
+
+Using that function, we can recursively run all of our computers until one of them halted:
+```ocaml
+let rec get_output (score, computers) =
+  if some_halted computers then score
+  else
+    computers
+    |> CCList.fold_map
+      (fun last_output comp ->
+         let comp' =
+           comp
+           |> Intcode.receive last_output
+           |> Intcode.run_until_halt in
+         comp'.output, comp')
+      score
+    |> get_output
+```
+
+With that in place, finding the solution for both parts is just a matter of running
+all the permutations of phase settings, and finding the maximal output:
+```ocaml
+let solve =
+  permutations
+  %> List.fold_left
+    (fun acc perm ->
+       let computers = create_computers perm in
+       (0, computers) |> get_output |> max acc)
+    0
+```
+
+</details>
