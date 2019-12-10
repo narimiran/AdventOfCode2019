@@ -368,3 +368,35 @@ let solve =
 ```
 
 </details>
+
+
+
+### Day 8
+
+[Space Image Format](http://adventofcode.com/2019/day/8) || [day08.ml](ocaml/day08.ml) || Runtime: 2 ms
+
+<details>
+
+This is an easy one after Day 7, which was the hardest one so far for me.
+
+The first part is boring:
+We count the number of each digit per layer, and find the layer with the fewest zeros.
+
+The second part is more interesting.
+For each pixel, we recursively try to find its color, starting from the top-most
+layer and until we reach a layer with a non-transparent pixel.
+Not a very efficient way of doing things (we repeatedly go through the list of layers,
+and then for each layer we go to `nth` pixel), but it wins for its simplicity:
+```ocaml
+let rec pixel_color layers pixel =
+  match layers with
+  | [] -> failwith "pixel is transparent"
+  | layer :: below ->
+    (match List.nth layer pixel with
+     | '0' -> ' '
+     | '1' -> '#'
+     | '2' -> pixel_color below pixel
+     | _ -> failwith "invalid input")
+```
+
+</details>
