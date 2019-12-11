@@ -6,7 +6,7 @@ type computer = {
   rp : int;
   state : state;
   in_queue : int Queue.t;
-  output : int;
+  out_queue : int Queue.t;
 }
 
 
@@ -28,7 +28,7 @@ let read_param param { ram ; ip ; rp ; _ } =
   | _ -> failwith "invalid parameter"
 
 
-let execute_opcode ({ ram; ip; rp; in_queue; _ } as comp) =
+let execute_opcode ({ ram; ip; rp; in_queue; out_queue; _ } as comp) =
   let noun = comp |> read_param 1 in
   match ram.(ip) mod 100 with
   | 1 | 2 | 7 | 8 as op ->
@@ -50,7 +50,8 @@ let execute_opcode ({ ram; ip; rp; in_queue; _ } as comp) =
      | None ->
        { comp with state = Waiting })
   | 4 ->
-    { comp with ip = ip+2; output = ram.(noun) }
+    Queue.add ram.(noun) out_queue;
+    { comp with ip = ip+2 }
   | 5 | 6 as op ->
     let verb = comp |> read_param 2 in
     let ( <>|= ) = if op = 5 then ( <> ) else ( = ) in
@@ -70,15 +71,11 @@ let initialize_memory size instructions =
   Array.blit instr 0 ram 0 l;
   ram
 
-let initialize_in_queue input =
-  let in_queue = Queue.create () in
-  Queue.add input in_queue;
-  in_queue
-
-let initialize_computer ?(input=0) ?(ram_size=4096) instructions =
+let initialize_computer ?(ram_size=4096) instructions =
   let ram = initialize_memory ram_size instructions in
-  let in_queue = initialize_in_queue input in
-  { ram; ip = 0; rp = 0; state = Running; in_queue; output = 0 }
+  let in_queue = Queue.create () in
+  let out_queue = Queue.create () in
+  { ram; ip = 0; rp = 0; state = Running; in_queue; out_queue }
 
 let run_until_halt comp =
   let rec run comp =
@@ -89,14 +86,19 @@ let run_until_halt comp =
   { comp with state = Running } |> run
 
 
+let get_state comp = comp.state
+
 let receive value comp =
   Queue.add value comp.in_queue;
   comp
 
-let get_state comp = comp.state
+let get_next_output comp =
+  Queue.take comp.out_queue
 
-let get_output_value comp =
-  comp.output
+let get_last_output comp =
+  comp.out_queue
+  |> Queue.to_seq
+  |> OSeq.reduce (fun _ v -> v)
 
 let set_positions l comp =
   List.iter (fun (p, v) -> comp.ram.(p) <- v) l;

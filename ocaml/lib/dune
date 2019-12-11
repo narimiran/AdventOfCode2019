@@ -1,4 +1,3 @@
 (library
   (name intcode)
-  (libraries containers))
-
+  (libraries containers oseq))

@@ -296,15 +296,38 @@ type computer = {
   rp : int;
   state : state;
   in_queue : int Queue.t;
-  output : int;
+  out_queue : int Queue.t;
 }
 ```
-where `ip` and `rp` are instruction and relative pointers, respectively.
-(Other fields should be self-explanatory)
+where `ip` and `rp` are instruction and relative pointers, respectively, and
+`in_queue` and `out_queue` are FIFO queues.
 
-Computer initialization supports specifying arbitrary RAM size (with the 4096 as the default),
-and passing initial value to the input queue.
-When computer has stopped (either waiting or halted), the whole state is
+Computer initialization supports specifying arbitrary RAM size (with the 4096 as the default).
+```ocaml
+let initialize_computer ?(ram_size=4096) instructions =
+  let ram = initialize_memory ram_size instructions in
+  let in_queue = Queue.create () in
+  let out_queue = Queue.create () in
+  { ram; ip = 0; rp = 0; state = Running; in_queue; out_queue }
+```
+
+We can write to `in_queue` and read from `out_queue`, either the next output value
+(days 7, 9, 11) or the last value in the queue (Day 5).
+```ocaml
+let receive value comp =
+  Queue.add value comp.in_queue;
+  comp
+
+let get_next_output comp =
+  Queue.take comp.out_queue
+
+let get_last_output comp =
+  comp.out_queue
+  |> Queue.to_seq
+  |> OSeq.reduce (fun _ v -> v)
+```
+
+When the computer has stopped (either waiting or halted), the whole state is
 returned as different tasks need different values from it.
 ```ocaml
 let run_until_halt comp =
