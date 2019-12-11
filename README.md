@@ -423,3 +423,25 @@ let rec pixel_color layers pixel =
 ```
 
 </details>
+
+
+
+### Day 9
+
+[Sensor Boost](http://adventofcode.com/2019/day/9) || [day09.ml](ocaml/day09.ml) || Runtime: 21 ms
+
+<details>
+
+This task has brought a relative pointer (`rp`) and a new mode (`2`):
+```ocaml
+  match mode with
+  | 0 -> param_val
+  | 1 -> ip + param
+  | 2 -> rp + param_val
+```
+
+With that in place, the [intcode computer](ocaml/lib/intcode.ml) is now complete.
+
+This felt even easier than Day 5.
+
+</details>
