@@ -445,3 +445,59 @@ With that in place, the [intcode computer](ocaml/lib/intcode.ml) is now complete
 This felt even easier than Day 5.
 
 </details>
+
+
+
+### Day 10
+
+[Monitoring Station](http://adventofcode.com/2019/day/10) || [day10.ml](ocaml/day10.ml) || Runtime: 33 ms
+
+<details>
+
+At first I didn't even bother to solve this one because all I could think of
+was some lousy `O(n^2)` algorithm, and "Surely, that can't be it, I need
+something more clever than that!".
+As it turns out, there's no need to be more clever than that
+(and don't call me Shirley!).
+
+Initially I solved the first part without `atan2` because I was afraid of
+floating point errors:
+```ocaml
+let slope (x1, y1) (x2, y2) =
+  let dx = x2 - x1 in
+  let dy = y2 - y1 in
+  let d = gcd dx dy |> abs in
+  let dx' = dx / d in
+  let dy' = dy / d in
+  (dx', dy')
+```
+
+Later on, for the second part, I decided to use `atan2` to keep things simple,
+so I refactored everything to use it.
+
+The first thing to notice in the task is that we are *not* in the usual
+right-hand Cartesian coordinate system (where y-axis is counter-clockwise
+from the x-axis), but in the left-hand one (y-axis points downwards).
+Or to put it differently, instead of the usual `x-y` coordinate system,
+we are in the rotated-clockwise `y-x` (right-hand!) coordinate system.
+
+This means we can still have the meaningful results of `atan2` by providing
+its arguments in reverse (`atan2 x y` instead of the usual `atan2 y x`).
+
+To find the 200th asteroid in the clockwise direction starting from pointing
+upwards, we need to sort the angles from the largest to smallest:
+```ocaml
+let angle_cmp (phi1, _) (phi2, _) = - Float.compare phi1 phi2
+```
+
+Fortunately, `Float.compare` correctly deals with any floating point inaccuracies,
+so we're able to filter out all asteroids with the same relative angle to
+our monitoring station:
+```ocaml
+asterioids
+|> relative_locations station
+|> OSeq.sort_uniq ~cmp:angle_cmp
+|> OSeq.nth 199
+```
+
+</details>
