@@ -501,3 +501,49 @@ asterioids
 ```
 
 </details>
+
+
+
+### Day 11
+
+[Space Police](http://adventofcode.com/2019/day/11) || [day11.ml](ocaml/day11.ml) || Runtime: 13 ms
+
+<details>
+
+We are once again in left-hand Cartesian coordinate system with y-axis pointing downwards,
+and we must take that into an account when making turns.
+
+A direction is defined as `(x, y)` tuple with possible values `(1, 0)` (right),
+`(-1, 0)` (left), `(0, 1)` (down!), and `(0, -1)` (up!).
+To make a turn we use the following function:
+```ocaml
+let rotate (x, y) = function
+  | Left -> (y, -x)
+  | Right -> (-y, x)
+```
+
+Painting the hull is a matter of recursively following the rules of the task,
+until the computer halts:
+
+1. read input from the current position
+1. run computer until it can't run no more (`Waiting` state)
+1. read the two outputs (`color` and `turn`, respectively)
+1. paint the current position
+1. change direction
+1. move to the next position
+
+```ocaml
+let input = panels |> PanelMap.get_or ~default:0 pos in
+let comp' =
+  comp
+  |> Intcode.receive input
+  |> Intcode.run_until_halt in
+let color = comp' |> Intcode.get_next_output in
+let turn = comp' |> Intcode.get_next_output |> Turn.of_int in
+let panels' = panels |> PanelMap.add pos color in
+let dir' = turn |> Turn.rotate dir in
+let pos' = Coord.(pos + dir') in
+paint panels' pos' dir' comp'
+```
+
+</details>
