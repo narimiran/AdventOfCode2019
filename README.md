@@ -547,3 +547,90 @@ paint panels' pos' dir' comp'
 ```
 
 </details>
+
+
+
+### Day 12
+
+[The N-Body Problem](http://adventofcode.com/2019/day/12) || [day12.ml](ocaml/day12.ml) || Runtime: 40 ms
+
+<details>
+
+The famous n-body problem! Woohoo!
+
+When I saw the input, I immediately remembered a
+[similar task ("Particle Swarm") from AoC 2017](https://adventofcode.com/2017/day/20).
+Not because I have a really good memory (I don't), but because I've solved AoC 2017 just
+one month ago, as a preparation for this year.
+
+So let's reuse some data-types from
+[that solution](https://github.com/narimiran/AdventOfCode2017/blob/master/ocaml/day20.ml),
+it might be an overkill but who knows, it may be useful for the second part:
+```ocaml
+type coord = { x : int; y : int; z : int }
+type moon = { p : coord; v : coord }
+```
+
+There is also no need for regex, `sscanf` does the job very well for these kinds
+of inputs:
+```ocaml
+let zeros = { x = 0; y = 0; z = 0 }
+
+let create_moon x y z = {
+  p = { x; y; z };
+  v = zeros;
+}
+
+let parse_line line =
+  Scanf.sscanf
+    line
+    "<x=%d, y=%d, z=%d>"
+    create_moon
+```
+
+Following the instructions on how to first calculate and then apply the gravity
+to velocity, followed by applying velocity to positions, the first part is just
+running the simulation with 1000 time steps, and calculating the total energy
+of the system:
+```ocaml
+let time_step moons =
+  moons
+  |> List.map (apply_gravity moons)
+  |> List.map apply_velocity
+
+let part_1 =
+  let open CCFun in
+  simulate 1000
+  %> List.map total_energy
+  %> List.fold_left (+) 0
+```
+
+And then... the second part appears.
+The first thing to do is just to ignore the instructions, which say
+*"the universe might last for a very long time before repeating"*.
+
+After a while, a change of mind.
+Ok, we might want to listen to the instructions after all :)
+
+A thought comes to my mind:
+There are multiple bodies which behave periodically, but each (probably) has
+its own period.
+We need to break this problem down into smaller ones, calculate the periods
+for each smaller problem and then find the least common multiple.
+
+The question remains: what are the smaller problems here?
+I had several wrong guesses before it dawned on me: the directions
+are independent of each other.
+
+That discovery is the best part of the solution for part 2.
+The code is quite ugly and I won't be posting it here.
+
+There are several parts where you can potentially make your code faster.
+- The first thing to notice is that you don't have to save every configuration,
+  the system will return at its original configuration.
+- The second thing that speeds things up is that you can only look for the time
+  where the velocities for each moon will return to its original values (zeros).
+  This happens twice per period (the initial state, and then the "farthest" state),
+  so we can find when this happens and then multiply the result by 2.
+
+</details>
