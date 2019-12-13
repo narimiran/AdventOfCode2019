@@ -634,3 +634,54 @@ There are several parts where you can potentially make your code faster.
   so we can find when this happens and then multiply the result by 2.
 
 </details>
+
+
+
+### Day 13
+
+[Care Package](http://adventofcode.com/2019/day/13) || [day13.ml](ocaml/day13.ml) || Runtime: 38 ms
+
+<details>
+
+Another odd day, another intcode task.
+
+The first part is straight-forward.
+Run the computer until it is halted, and then go through the outputs to count
+how many times you encounter a `Block` tile.
+This could have been done simply by counting number of `2`s seen, but that
+felt like a magic number, so I created a `Tile` module, so that there is no
+confusion about it:
+```ocaml
+module Tile = struct
+  type t = Empty | Wall | Block | Paddle | Ball
+
+  let of_int = function
+    | 0 -> Empty
+    | 1 -> Wall
+    | 2 -> Block
+    | 3 -> Paddle
+    | 4 -> Ball
+    | _ -> failwith "invalid tile"
+end
+```
+
+The second part was very problematic for me because I didn't understand that we
+need to read *all* the outputs every time we halt.
+I first thought it was just three outputs each time, and it took me a lot of
+time to figure that one out.
+I would have appreciated a more detailed instructions for the second part.
+
+Having a `Tile` module also makes finding a paddle and a ball more readable
+and understandable than just having some "magic numbers" like 3 and 4:
+
+```ocaml
+let (x, y, t) = comp |> Intcode.get_next_3_outputs in
+if (x, y) = (-1, 0) then score := t
+else
+  match Tile.of_int t with
+  | Tile.Paddle -> paddle_pos := x
+  | Tile.Ball -> ball_pos := x
+  | _ -> ()
+```
+
+</details>

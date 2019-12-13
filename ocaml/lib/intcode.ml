@@ -95,6 +95,15 @@ let receive value comp =
 let get_next_output comp =
   Queue.take comp.out_queue
 
+let get_next_3_outputs comp =
+  let x = get_next_output comp in
+  let y = get_next_output comp in
+  let t = get_next_output comp in
+  (x, y, t)
+
+let is_out_empty comp =
+  Queue.is_empty comp.out_queue
+
 let get_last_output comp =
   comp.out_queue
   |> Queue.to_seq
