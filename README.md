@@ -6,7 +6,8 @@ All my Advent of Code repos:
 * [AoC 2016 in Python](https://github.com/narimiran/advent_of_code_2016)
 * [AoC 2017 in Nim, OCaml, Python](https://github.com/narimiran/AdventOfCode2017)
 * [AoC 2018 in Nim](https://github.com/narimiran/AdventOfCode2018)
-* [AoC 2019 in OCaml](https://github.com/narimiran/AdventOfCode2019) (this repo)
+* [AoC 2019 in OCaml, Python](https://github.com/narimiran/AdventOfCode2019) (this repo)
+* [AoC 2020 in Nim, one liner-y Python](https://github.com/narimiran/AdventOfCode2020)
 
 
 &nbsp;
@@ -21,6 +22,8 @@ but only after I've solved all tasks with other languages first -- as a preparat
 To keep this readme at a reasonable vertical size when rendered,
 highlights and thoughts for each day are hidden behind the "details" flag.
 Click on it if you want to read my ramblings.
+
+(Python solutions were added later.)
 
 
 ### Day 1
