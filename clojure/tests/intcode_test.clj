@@ -1,7 +1,8 @@
 (ns intcode-test
   (:require [intcode :as ic]
             [clojure.string :as str]
-            [clojure.test :refer [deftest testing is run-tests successful?]]))
+            [clojure.test :refer [deftest testing is]]
+            day02 day05 day07 day09 day11))
 
 
 (defn run-program [instructions]
@@ -78,6 +79,14 @@
 
 
 
-(let [summary (run-tests)]
-  (when-not (successful? summary)
-    (throw (Exception. "some tests failed"))))
+(deftest solutions
+  (is (= [7594646 3376] (day02/solve 2)))
+  (is (= [13294380 11460760] (day05/solve 5)))
+  (is (= [67023 7818398] (day07/solve 7)))
+  (is (= [3546494377 47253] (day09/solve 9)))
+  (is (= [1909 ["   ██ █  █ ████ ████ █  █ █  █ ███  █  █"
+                "    █ █  █ █    █    █ █  █  █ █  █ █  █"
+                "    █ █  █ ███  ███  ██   ████ █  █ ████"
+                "    █ █  █ █    █    █ █  █  █ ███  █  █"
+                " █  █ █  █ █    █    █ █  █  █ █    █  █"
+                "  ██   ██  █    ████ █  █ █  █ █    █  █"]] (day11/solve 11))))
