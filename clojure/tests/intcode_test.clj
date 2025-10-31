@@ -3,7 +3,7 @@
             [clojure.string :as str]
             [clojure.test :refer [deftest testing is]]
             day02 day05 day07 day09 day11 day13
-            day15 day17 day19))
+            day15 day17 day19 day21))
 
 
 (defn run-program [instructions]
@@ -94,4 +94,5 @@
   (is (= [270 12535] (day13/solve 13)))
   (is (= [246 376] (day15/solve 15)))
   (is (= [10064 1197725] (day17/solve 17)))
-  (is (= [189 7621042] (day19/solve))))
+  (is (= [189 7621042] (day19/solve)))
+  (is (= [19357544 1144498646] (day21/solve 21))))
