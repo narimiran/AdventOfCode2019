@@ -5,9 +5,8 @@
 (def computer (ic/initialize-from-file 19))
 
 (defn- check-pt [x y]
-  (-> computer
-      (ic/in-run-out [x y])
-      :output))
+  (ic/in-run-result computer [x y]))
+
 
 (defn- part-1 []
   (reduce +

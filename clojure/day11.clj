@@ -26,8 +26,8 @@
   (let [computer (ic/initialize-from-file filename)]
     [(count (paint computer 0))
      (->> (paint computer 1)
-          (filter (fn [[_ v]] (not (zero? v))))
-          (into {})
+          (keep (fn [[pt v]] (when (not (zero? v)) pt)))
+          set
           aoc/points->lines
           #_(run! println))]))
 

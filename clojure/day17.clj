@@ -68,7 +68,7 @@
 
           :else
           (str/join "," acc))))))
- 
+
 
 ; from `trace-movements` and then some manual search and replace
 (def movement-functions
@@ -82,8 +82,7 @@
 (defn- part-2 [computer]
   (-> computer
       (ic/modify-ram [0 2])
-      (ic/in-run-out (ic/to-machine-code movement-functions))
-      :output))
+      (ic/in-run-result (ic/to-machine-code movement-functions))))
 
 
 (defn solve [filename]

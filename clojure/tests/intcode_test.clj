@@ -6,7 +6,7 @@
             day15 day17 day19 day21 day23 day25))
 
 
-(defn run-program [instructions]
+(defn- run-program [instructions]
   (-> instructions
       ic/initialize-computer
       ic/run-until-halt
@@ -19,49 +19,37 @@
   (is (= [30,1,1,4,2,5,6,0,99] (take 9 (run-program "1,1,1,4,99,5,6,0,99")))))
 
 
-
-(defn check-output [computer]
-  (-> computer
-      ic/run-until-halt
-      ic/pop-out-queue
-      :output))
-
-(defn take-input-and-run [computer input]
-  (-> computer
-      (ic/send-to-in-queue [input])
-      check-output))
-
 (deftest day05-examples
   (testing "position mode, equal"
     (let [computer (ic/initialize-computer "3,9,8,9,10,9,4,9,99,-1,8")
-          results  (mapv #(take-input-and-run computer %) [-1 0 7 8 9])]
+          results  (mapv #(ic/in-run-result computer %) [-1 0 7 8 9])]
       (is (= [0 0 0 1 0] results))))
   (testing "position mode, less than"
     (let [computer (ic/initialize-computer "3,9,7,9,10,9,4,9,99,-1,8")
-          results  (mapv #(take-input-and-run computer %) [-1 0 7 8 9])]
+          results  (mapv #(ic/in-run-result computer %) [-1 0 7 8 9])]
       (is (= [1 1 1 0 0] results))))
   (testing "immediate mode, equal"
     (let [computer (ic/initialize-computer "3,3,1108,-1,8,3,4,3,99")
-          results  (mapv #(take-input-and-run computer %) [-1 0 7 8 9])]
+          results  (mapv #(ic/in-run-result computer %) [-1 0 7 8 9])]
       (is (= [0 0 0 1 0] results))))
   (testing "immediate mode, less than"
     (let [computer (ic/initialize-computer "3,3,1107,-1,8,3,4,3,99")
-          results  (mapv #(take-input-and-run computer %) [-1 0 7 8 9])]
+          results  (mapv #(ic/in-run-result computer %) [-1 0 7 8 9])]
       (is (= [1 1 1 0 0] results))))
   (testing "position mode, jump"
     (let [computer (ic/initialize-computer "3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9")
-          results  (mapv #(take-input-and-run computer %) [-9 -1 0 1 9])]
+          results  (mapv #(ic/in-run-result computer %) [-9 -1 0 1 9])]
       (is (= [1 1 0 1 1] results))))
   (testing "immediate mode, jump"
-    (let [computer (ic/initialize-computer "3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9")
-          results  (mapv #(take-input-and-run computer %) [-9 -1 0 1 9])]
+    (let [computer (ic/initialize-computer "3,3,1105,-1,9,1101,0,0,12,4,12,99,1")
+          results  (mapv #(ic/in-run-result computer %) [-9 -1 0 1 9])]
       (is (= [1 1 0 1 1] results))))
   (testing "larger example"
     (let [computer (ic/initialize-computer
                     (str/join "," [3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
                                    1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
                                    999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99]))
-          results  (mapv #(take-input-and-run computer %) [-1 0 7 8 9])]
+          results  (mapv #(ic/in-run-result computer %) [-1 0 7 8 9])]
       (is (= [999 999 999 1000 1001] results)))))
 
 
@@ -74,9 +62,9 @@
              :out-queue
              (->> (take 16)))))
   (is (= 1219070632396864
-         (-> "1102,34915192,34915192,7,4,7,99,0" ic/initialize-computer check-output)))
+         (-> "1102,34915192,34915192,7,4,7,99,0" ic/initialize-computer (ic/in-run-result []))))
   (is (= 1125899906842624
-         (-> "104,1125899906842624,99" ic/initialize-computer check-output))))
+         (-> "104,1125899906842624,99" ic/initialize-computer (ic/in-run-result [])))))
 
 
 

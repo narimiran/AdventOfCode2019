@@ -54,9 +54,8 @@
       :immediate-mode loc
       :relative-mode  (+ rp (ram loc)))))
 
-(defn- assoc-ram [{:keys [ram] :as computer} loc v]
-  (let [ram' (assoc ram loc v)]
-    (assoc computer :ram ram')))
+(defn- assoc-ram [computer loc v]
+  (assoc-in computer [:ram loc] v))
 
 
 (defn- binary-op [{:keys [ram] :as computer} opcode]
@@ -161,6 +160,11 @@
       run-until-halt
       pop-out-queue))
 
+(defn in-run-result [computer input]
+  (-> computer
+      (in-run-out input)
+      :output))
+
 (defn load-instructions
   ([input] (load-instructions input 4096))
   ([input size]
@@ -168,10 +172,9 @@
      (into instrs (repeat (- size (count instrs)) 0)))))
 
 (defn to-machine-code [input]
-  (->> input
-       (str/join "\n")
-       (#(str % "\n"))
-       (mapv int)))
+  (-> (str/join "\n" input)
+      (str "\n")
+      (->> (mapv int))))
 
 (defn initialize-computer
   ([input] (initialize-computer input 4096))
@@ -188,6 +191,6 @@
     :rp        0}))
 
 (defn initialize-from-file
-  ([filename] (initialize-from-file filename 4096))
+  ([filename] (initialize-computer (aoc/read-file filename)))
   ([filename ram-size]
    (initialize-computer (aoc/read-file filename) ram-size)))

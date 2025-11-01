@@ -17,8 +17,7 @@
 
 (defn run [filename instructions command]
   (-> (ic/initialize-from-file filename)
-      (ic/in-run-out (ic/to-machine-code (conj instructions command)))
-      :output))
+      (ic/in-run-result (ic/to-machine-code (conj instructions command)))))
 
 
 (defn solve [filename]
