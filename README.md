@@ -6,12 +6,12 @@ All my Advent of Code repos:
 * [AoC 2016 in Python, Clojure (+ visualizations)](https://github.com/narimiran/advent_of_code_2016)
 * [AoC 2017 in Nim, OCaml, Python](https://github.com/narimiran/AdventOfCode2017)
 * [AoC 2018 in Nim, Python, Racket](https://github.com/narimiran/AdventOfCode2018)
-* [AoC 2019 in OCaml, Python](https://github.com/narimiran/AdventOfCode2019) (this repo)
+* [AoC 2019 in OCaml, Python, Clojure](https://github.com/narimiran/AdventOfCode2019) (this repo)
 * [AoC 2020 in Nim, one liner-y Python, Racket](https://github.com/narimiran/AdventOfCode2020)
 * [AoC 2021 in Python, Racket](https://github.com/narimiran/AdventOfCode2021)
 * [AoC 2022 in Python, Clojure](https://github.com/narimiran/AdventOfCode2022)
 * [AoC 2023 in Clojure](https://github.com/narimiran/AdventOfCode2023)
-* [AoC 2024 in Clojure (Clerk notebooks)](https://github.com/narimiran/aoc2024)
+* [AoC 2024 in Clojure (Clerk notebooks), Python, Elixir](https://github.com/narimiran/aoc2024)
 
 
 &nbsp;
@@ -27,7 +27,16 @@ To keep this readme at a reasonable vertical size when rendered,
 highlights and thoughts for each day are hidden behind the "details" flag.
 Click on it if you want to read my ramblings.
 
-([Python solutions](python/) were added at a much later date.)
+----
+
+[Python solutions](python/) were added at a much later date.
+
+And [Clojure solutions](clojure/) were added at even "mucher" later date, in October 2025, when I
+decided to chase the missing stars on the way to all 500 stars in first ten years of AoC.\
+The Clojure solutions contain all IntCode tasks (both OCaml and Python solution are missing some tasks), plus some more of not-already-solved tasks.
+
+
+----
 
 
 
