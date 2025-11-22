@@ -1,5 +1,5 @@
 (ns day20
-  (:require aoc))
+  (:require [aoc-utils.core :as aoc]))
 
 
 (defn- at [grid i j]
@@ -50,9 +50,11 @@
              (cond
                (nil? curr) nil
                (= curr end) [[start end] dist]
-               :else (let [nbs (aoc/neighbours 4 curr (fn [pt]
-                                                        (and (not (seen pt))
-                                                             (= \. (apply at grid pt)))))
+               :else (let [nbs (aoc/neighbours-4
+                                curr
+                                (fn [pt]
+                                  (and (not (seen pt))
+                                       (= \. (apply at grid pt)))))
                            nbs+dist (map (fn [pt] [pt (inc dist)]) nbs)]
                          (recur (into (pop queue) nbs+dist)
                                 (into seen nbs)))))))
@@ -105,7 +107,7 @@
 
 
 (defn solve [filename]
-  (let [data (aoc/parse-input (aoc/read-file filename) :chars)
+  (let [data (aoc/parse-lines (aoc/read-input filename) :chars)
         h (count data)
         w (count (first data))
         [ends jumps] (find-portals data)

@@ -1,6 +1,6 @@
 (ns intcode
   (:require
-   aoc
+   [aoc-utils.core :as aoc]
    [clojure.math :refer [pow]]
    [clojure.string :as str]))
 
@@ -168,7 +168,7 @@
 (defn load-instructions
   ([input] (load-instructions input 4096))
   ([input size]
-   (let [instrs (aoc/parse-input-line input :ints)]
+   (let [instrs (aoc/parse-input input :ints)]
      (into instrs (repeat (- size (count instrs)) 0)))))
 
 (defn to-machine-code [input]
@@ -191,6 +191,6 @@
     :rp        0}))
 
 (defn initialize-from-file
-  ([filename] (initialize-computer (aoc/read-file filename)))
+  ([filename] (initialize-computer (aoc/read-input filename)))
   ([filename ram-size]
-   (initialize-computer (aoc/read-file filename) ram-size)))
+   (initialize-computer (aoc/read-input filename) ram-size)))

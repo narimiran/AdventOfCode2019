@@ -1,6 +1,6 @@
 (ns day07
   (:require
-   [aoc :refer [empty-queue]]
+   [aoc-utils.core :refer [empty-queue]]
    [clojure.math.combinatorics :as combo]
    [intcode :as ic]))
 

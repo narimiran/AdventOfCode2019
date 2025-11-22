@@ -1,5 +1,5 @@
 (ns day18
-  (:require aoc
+  (:require [aoc-utils.core :as aoc]
             [clojure.data.priority-map :refer [priority-map]]))
 
 
@@ -7,11 +7,12 @@
 
 
 (defn- parse-data [data]
-  (let [walls (aoc/grid->point-set data #{\#})
-        robots (aoc/grid->point-map data #{\@})
-        doors (aoc/grid->point-map data Character/isUpperCase)
-        locks (aoc/grid->point-map data Character/isLowerCase)]
-    (->Grid walls robots doors locks)))
+  (-> (aoc/create-grid data {\# :walls
+                             #{\@} :robots
+                             Character/isUpperCase :doors
+                             Character/isLowerCase :locks})
+      (select-keys [:walls :robots :doors :locks])
+      (map->Grid)))
 
 
 (defn- path [pt1 pt2 {:keys [walls doors locks]}]
@@ -24,7 +25,7 @@
           (= curr pt2) [dist drs lcks]
           :else (let [seen' (conj seen curr)
                       dist' (inc dist)
-                      nbs (aoc/neighbours 4 curr (every-pred not-walls (complement seen)))
+                      nbs (aoc/neighbours-4 curr (every-pred not-walls (complement seen)))
                       queue' (reduce (fn [q nb]
                                        (conj q [nb
                                                 dist'
@@ -77,7 +78,7 @@
 
 (defn- modify-grid [{:keys [walls robots doors locks]}]
   (let [robot-coord (ffirst robots)
-        new-walls (aoc/neighbours 5 robot-coord)
+        new-walls (conj (aoc/neighbours-4 robot-coord) robot-coord)
         new-robots {(aoc/pt+ robot-coord [-1 -1]) \1
                     (aoc/pt+ robot-coord [ 1 -1]) \2
                     (aoc/pt+ robot-coord [-1  1]) \3
@@ -118,7 +119,7 @@
 
 
 (defn solve [filename]
-  (let [data (parse-data (aoc/parse-input (aoc/read-file filename)))
+  (let [data (parse-data (aoc/parse-lines (aoc/read-input filename)))
         paths (all-paths data)
         pt2-data (modify-grid data)
         pt2-paths (all-paths pt2-data)

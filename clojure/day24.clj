@@ -1,5 +1,5 @@
 (ns day24
-  (:require aoc
+  (:require [aoc-utils.core :as aoc]
             [clojure.math :refer [pow]]))
 
 
@@ -7,7 +7,7 @@
   (set (map (fn [[x y]] [x y 0]) grid)))
 
 (defn- biodiversity [grid]
-  (long (reduce + (map (fn [[x y]] (pow 2 (+ x (* 5 y)))) grid))))
+  (long (aoc/sum-map (fn [[x y]] (pow 2 (+ x (* 5 y)))) grid)))
 
 (defn- neighbours-2d [x y z]
   [[(dec x) y z] [(inc x) y z] [x (dec y) z] [x (inc y) z]])
@@ -65,9 +65,10 @@
 
 
 (defn solve [filename]
-  (let [bugs (-> (aoc/read-file filename)
-                 aoc/parse-input
-                 (aoc/grid->point-set #{\#})
+  (let [bugs (-> (aoc/read-input filename)
+                 aoc/parse-lines
+                 (aoc/create-grid {\# :bugs})
+                 :bugs
                  grid->3d)]
     [(part-1 bugs) (part-2 bugs)]))
 

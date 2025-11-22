@@ -1,6 +1,6 @@
 (ns day13
   (:require [intcode :as ic]
-            aoc))
+            [aoc-utils.core :refer [empty-queue]]))
 
 
 (defn part-1 [computer]
@@ -25,7 +25,7 @@
         (and (empty? queue) (= :halted (-> state :computer :status))) state
         (empty? queue) (let [joystick (sign (- (:ball-x state) (:paddle-x state)))]
                          (-> state
-                             (assoc-in [:computer :out-queue] aoc/empty-queue)
+                             (assoc-in [:computer :out-queue] empty-queue)
                              (update :computer ic/send-to-in-queue [joystick])))
         :else (let [[x y tile & queue'] queue
                     state' (cond-> state

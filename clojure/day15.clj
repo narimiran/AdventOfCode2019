@@ -1,6 +1,6 @@
 (ns day15
   (:require [intcode :as ic]
-            aoc))
+            [aoc-utils.core :as aoc]))
 
 (def directions
   {1 [0 -1]

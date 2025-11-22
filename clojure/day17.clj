@@ -1,5 +1,5 @@
 (ns day17
-  (:require aoc
+  (:require [aoc-utils.core :as aoc]
             [intcode :as ic]
             [clojure.string :as str]))
 
@@ -42,7 +42,7 @@
                   j (range 1 (dec w))
                   :when (and (scaffold? grid i j)
                              (every? #(apply scaffold? grid %)
-                                     (aoc/neighbours 4 [i j])))]
+                                     (aoc/neighbours-4 [i j])))]
               (* i j)))))
 
 

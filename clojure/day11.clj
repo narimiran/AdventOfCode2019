@@ -1,6 +1,6 @@
 (ns day11
   (:require [intcode :as ic]
-            aoc))
+            [aoc-utils.core :as aoc]))
 
 
 (defn- paint [computer initial]
@@ -28,8 +28,8 @@
      (->> (paint computer 1)
           (keep (fn [[pt v]] (when (not (zero? v)) pt)))
           set
-          aoc/points->lines
-          #_(run! println))]))
+          aoc/show-grid
+          #_println)]))
 
 
 (solve 11)
