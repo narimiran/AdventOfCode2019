@@ -1,6 +1,6 @@
 {:paths ["." "tests"]
  :deps  {org.clojure/clojure             {:mvn/version "1.12.3"}
-         com.github.narimiran/aoc-utils  {:git/tag "v0.8.3" :git/sha "be4033"}
+         com.github.narimiran/aoc-utils  {:git/tag "v0.9.0" :git/sha "c1d07b"}
          org.clojure/math.combinatorics  {:mvn/version "0.3.0"}
          org.clojure/data.priority-map   {:mvn/version "1.2.0"}}
  :aliases
